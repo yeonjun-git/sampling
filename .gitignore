@@ -1,0 +1,16 @@
+# directory
+build/
+
+# cashe etc
+__pycache__/
+node_modules/
+.ipynb_checkpoints/
+.DS_Store
+.github
+
+# core package
+analysis/distribution.py
+analysis/distribution.c
+
+# test
+*test*.py
