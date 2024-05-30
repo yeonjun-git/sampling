@@ -68,7 +68,7 @@ class BaseOperator:
         except Exception as e:
             return print(e, f"{func_name} is not working ")
     
-    def find_variable(self, text: str):
+    def find_variable(text: str):
         """
         인스턴스 변수에서 원하는 문자열이 포함된 변수를 딕셔너리로 저장
         
@@ -85,7 +85,7 @@ class BaseOperator:
             func_name = inspect.currentframe().f_code.co_name
             return print(e, f"{func_name} is not working ")
         
-    def execute_for(self, iteration: list, *methods: callable):
+    def execute_for(iteration: list, *methods: callable):
         """
         여러개의 함수를 가변인자로 받아 리스트의 반복만큼 실행하는 함수
         
@@ -102,7 +102,7 @@ class BaseOperator:
         
         try:
             for idx, _ in enumerate(iteration):
-                self.idx = idx
+                idx = idx
                 self.iter_value = _
                 print(f"============ {_} ===============")
                 
@@ -127,13 +127,57 @@ class BaseOperator:
 
                     with open(filepath, "w") as file:
                         file.write(updated_content)
-                    
-
+    
+    @staticmethod
+    def find_directory(start_path: str, target_directory_name: str, visited=None, founded=False):
+        
+        if os.path.isdir(start_path):
+            curr_dir = start_path
+        else:
+            curr_dir = os.path.dirname(start_path)
+        
+        if visited == None:
+            visited = list()
+            try_num = 1
+            visited.append(try_num)
+        
+        while founded == False:
+            
+            tried_num = visited[0]
+            print(f"{tried_num}th try to find {target_directory_name}")
+            
+            if tried_num > 4:
+                print("Can not find target directory in short time")
+                break
+            
+            for root, dirs, files in os.walk(curr_dir):
+                
+                if root in visited:
+                    continue
+                else:
+                    visited.append(root)
+                
+                    if os.path.basename(root) == target_directory_name:
+                        founded = True
+                        print(f"{target_directory_name} founded")
+                        return root
+            
+            visited[0] = tried_num + 1
+            
+            upper_dir = os.path.dirname(curr_dir)
+            return BaseOperator.find_directory(upper_dir, target_directory_name, visited)
+        
 if __name__ == "__main__":
     
-    dir = BaseOperator.set_path(
-        'ocean_flow',
-        '/sql/master_tbl' # master_tbl
+    curr_path = os.path.abspath(__file__)
+    dir = BaseOperator.find_directory(
+        start_path=curr_path,
+        target_directory_name='lotto_data'
     )
-    BaseOperator.replace_keywords_in_files(dir, 'test', 'ocean_yard')
-        
+    
+    # visited = set()
+    
+    # visited.add(0)
+    # visited.add(1)
+    # print(visited[0])
+    
