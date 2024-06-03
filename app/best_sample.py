@@ -129,5 +129,5 @@ if __name__ == '__main__':
     data = sampling_instance.filtering_for_combine(data)
     data = sampling_instance.filtering_for_probability(data)
        
-    print(data)
+    
     
